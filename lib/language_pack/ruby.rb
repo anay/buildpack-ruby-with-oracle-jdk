@@ -321,19 +321,13 @@ ERROR
   # vendors JVM into the slug for JRuby
   def install_jvm(forced = false)
     instrument 'ruby.install_jvm' do
-      if ruby_version.jruby? || forced
-        jvm_version =
-          if forced || Gem::Version.new(ruby_version.engine_version) >= Gem::Version.new("1.7.4")
-            LATEST_JVM_VERSION
-          else
-            LEGACY_JVM_VERSION
-          end
+        jvm_version = "1.8.0_25"
 
         topic "Installing JVM: #{jvm_version}"
 
         FileUtils.mkdir_p(slug_vendor_jvm)
         Dir.chdir(slug_vendor_jvm) do
-          @fetchers[:jvm].fetch_untar("#{jvm_version}.tar.gz")
+          @fetchers[:jvm].fetch_jdk
         end
 
         bin_dir = "bin"
@@ -341,7 +335,6 @@ ERROR
         Dir["#{slug_vendor_jvm}/bin/*"].each do |bin|
           run("ln -s ../#{bin} #{bin_dir}")
         end
-      end
     end
   end
 

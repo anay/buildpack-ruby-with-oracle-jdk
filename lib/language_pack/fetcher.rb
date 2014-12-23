@@ -19,6 +19,10 @@ module LanguagePack
       run!(curl, error_class: FetchError)
     end
 
+    def fetch_jdk
+      run!("wget --quiet --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' -O - 'http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz' | tar xz --strip-components=1", error_class: FetchError)
+    end
+
     def fetch_untar(path, files_to_extract = nil)
       curl = curl_command("#{@host_url.join(path)} -s -o")
       run!("#{curl} - | tar zxf - #{files_to_extract}", error_class: FetchError)
